@@ -31,9 +31,9 @@ pub async fn write_giftee(ctx: Context<'_>) -> Result<(), Error> {
                 match database::get_giftee(user_id).await {
                     Ok(giftee) => {
                         let giftee_id = UserId::new(giftee);
-                        let user_name = match giftee_id.to_user(ctx.http()).await {
-                            Ok(u) => u.name,
-                            Err(_) => "giftee".to_string(),
+                        let user_name = match database::get_giftee_name(user_id).await {
+                            Ok(name) => name,
+                            Err(_) => "giftee".to_string()
                         };
 
                         let embed = utilities::embed_builder(
