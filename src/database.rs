@@ -124,10 +124,10 @@ pub async fn get_giftee_letter(santa_id: u64) -> Result<Option<String>> {
 
 pub async fn get_giftee_name(santa_id: u64) -> Result<String> {
     const GET_NAME: &str = "
-    SELECT u.username
-    FROM claimed_letters cl
-    JOIN users u ON cl.owner_id = u.discord_id
-    WHERE cl.claimee_id = ?;
+    SELECT u2.username
+    FROM users u1
+    JOIN users u2 ON u1.giftee_id = u2.discord_id
+    where u1.discord_id = ?1
     ";
     let conn = Connection::open(PATH).map_err(|e| {
         eprintln!("Failed to open database: {}", e);
