@@ -29,7 +29,7 @@ pub async fn read(ctx: Context<'_>) -> Result<(), Error> {
                 let giftee_name: String;
                 match database::get_giftee_name(ctx.author().id.get()).await {
                     Ok(name) => giftee_name = name,
-                    Err(e) => giftee_name = "giftee".to_string();
+                    Err(_) => giftee_name = "giftee".to_string()
                 }
                 let embed = embed_builder(
                     &l,
