@@ -54,7 +54,7 @@ impl Phase {
         match s {
             "Join" => Some(Phase::Join),
             "Swap" => Some(Phase::Swap),
-            "Read" => Some(Phase::Watch),
+            "Watch" => Some(Phase::Watch),
             _ => None,
         }
     }

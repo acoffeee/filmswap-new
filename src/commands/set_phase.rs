@@ -58,6 +58,9 @@ pub async fn set_phase(
                         let message = format!("Succesfully changed phase from watch to swap.");
                         ctx.send(CreateReply::default().content(message).ephemeral(true))
                             .await?;
+                        if let Err(e) = send_out_letters(&ctx).await  {
+                            eprintln!("Error sending out letters: {:?}", e);
+                        }
                     }
                     Err(e) => {
                         let message =
@@ -89,7 +92,7 @@ async fn send_out_letters(ctx: &Context<'_>) -> Result<(), Error>{
         Ok(users) => {
             let mut uids: Vec<u64> = Vec::new();
             users.into_iter()
-                 .map(
+                 .for_each(
                     |user| uids.push(user.0)
                  );
             uids
@@ -122,9 +125,7 @@ async fn send_out_letters(ctx: &Context<'_>) -> Result<(), Error>{
                         &format!("Love, {}", giftee_name),
                     );
                     let message = CreateMessage::new().embed(embed);
-                    if let Err(e) = santa.dm(&ctx.http(), message).await {
-                                eprintln!("Error sending message to giftee: {}", e);
-                            }
+                    santa.dm(&ctx.http(), message).await?;
                 }
                 None => {
                     let giftee_name: String;
@@ -133,7 +134,7 @@ async fn send_out_letters(ctx: &Context<'_>) -> Result<(), Error>{
                         Err(_) => giftee_name = "giftee".to_string()
                     }
                     let message = CreateMessage::default().content(format!("Your giftee ({}) does not have a letter", giftee_name));
-                    santa.dm(&ctx.http(),message);
+                    santa.dm(&ctx.http(),message).await?;
                 }
             },
             Err(e) => {

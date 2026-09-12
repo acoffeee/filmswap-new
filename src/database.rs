@@ -260,7 +260,6 @@ pub fn get_phase() -> rusqlite::Result<Phase> {
             |row| row.get(0),
         )
         .optional()?;
-
     Ok(value
         .and_then(|s| Phase::from_str(&s))
         .unwrap_or(Phase::Join))
